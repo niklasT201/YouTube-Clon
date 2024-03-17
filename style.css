@@ -1,0 +1,74 @@
+body {
+    background-color: black;
+    font-family: 'Roboto', sans-serif;
+}
+
+header {
+    background-color: rgb(39, 43, 43);
+}
+
+nav {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    align-items: center;
+    background-color: rgb(39, 43, 43);
+    width: 100%;
+    height: 60px;
+    font-size: 20px;
+}
+
+nav a {
+    text-decoration: none;
+    color: white;
+    margin: 10px;
+}
+
+nav input {
+    border-radius: 16px 0px 0px 16px;
+    font-size: 20px;
+    border: none;
+}
+
+nav button {
+    height: 25px;
+    border-radius: 0px 16px 16px 0px;
+    border: none;
+    width: 30px;
+}
+
+.video-container {
+    color: white;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); /* Adjust column width as needed */
+    gap: 20px; /* Adjust gap between videos */
+    padding: 20px;
+
+}
+
+.video-item {
+    background-color: rgba(255, 255, 255, 0.1); /* Adjust background color */
+    border-radius: 10px;
+    padding: 20px;
+    display: flex; /* Ensure the anchor takes up the entire space of the video item */
+    flex-direction: column; /* Stack elements vertically inside the video item */
+    text-align: center; /* Center align text */
+    text-decoration: none; /* Remove default anchor styling */
+    color: inherit; /* Inherit text color from parent */
+}
+
+.video-item h2, .video-item p {
+    text-align: left; /* Align title and creator to the left */
+}
+
+.video-item img {
+    height: 170px;
+    width: 200px;
+    margin-bottom: 10px; /* Add some space between image and text */
+    border-radius: 10px;
+    align-self: center; /* Center align image vertically within the video-item */
+}
+
+@media (max-width: 720px){
+    
+}
