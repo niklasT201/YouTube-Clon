@@ -53,6 +53,10 @@
 <body>
     <div class="video-container">
         <?php
+
+    session_start();
+
+
         // Check if the 'id' parameter is set in the URL
         if(isset($_GET['id'])) {
             // Connect to the database
@@ -85,6 +89,11 @@
                 echo '<p>' . $row["creator"] . '</p>';
                 echo '<p>' . $row["description"] . '</p>';
                 echo '</div>';
+
+                 // Show the delete button only if the user is logged in and is the creator of the video
+                 if(isset($_SESSION['name']) && $_SESSION['name'] == $row["creator"]) {
+                    echo '<button class="submit delete-button" onclick="deleteVideo(' . $row["id"] . ')">Delete Your Video</button>';
+                }
             } else {
                 echo "Video not found.";
             }
@@ -124,6 +133,13 @@
 
         image.style.display = 'none';
         video.style.display = 'block';
+    }
+
+      // Function to delete the video
+      function deleteVideo(videoId) {
+        if(confirm("Are you sure you want to delete this video?")) {
+            window.location.href = "delete.php?id=" + videoId;
+        }
     }
     
 </script>

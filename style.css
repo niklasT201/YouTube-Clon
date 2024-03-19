@@ -30,6 +30,16 @@ nav input {
     border: none;
 }
 
+header nav form {
+    display: flex;
+    align-items: center;
+}
+
+header nav form input[type="text"] {
+    flex: 1;
+   
+}
+
 nav button {
     height: 25px;
     border-radius: 0px 16px 16px 0px;

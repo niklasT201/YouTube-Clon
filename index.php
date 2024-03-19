@@ -10,9 +10,11 @@
 <body>
     <header>
         <nav>
-            <a href="#">Home</a>
-            <input type="text">
-            <button class="submit"></button>
+            <a href="index.php">Home</a>
+            <form action="search.php">
+            <input type="text" name="query">
+            <button type="submit" class="submit"></button>
+            </form>
             <?php
             // Check if the user is logged in (i.e., if the session variable is set)
             session_start();

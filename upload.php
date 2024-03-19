@@ -46,9 +46,7 @@
 <body>
 
     <form action="upload.php" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
-        <label for="creator">Creator:</label><br>
-        <textarea id="creator" name="creator"></textarea><br><br>
-
+        
         <label for="title">Title:</label><br>
         <textarea id="title" name="title" style="width: 550px; height: 40px"></textarea><br><br>
         
@@ -64,7 +62,19 @@
         <button type="submit" class="submit">Submit</button>
     </form>
 
-<?php
+    <?php
+session_start();
+
+// Check if the user is logged in
+if (!isset($_SESSION['name'])) {
+    // Redirect the user to the login page if not logged in
+    header("Location: login.php");
+    exit;
+}
+
+// Set the creator to be the name of the logged-in account
+$creator = $_SESSION['name'];
+
 // Check if form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Connect to the database
@@ -78,50 +88,43 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get data from form
     $title = $_POST["title"];
     $description = $_POST["description"];
-    $creator = $_POST["creator"];
 
     // File upload handling
     $imageTargetDir  = "uploads/"; // Directory where uploaded files will be stored
     $imageTargetFile = $imageTargetDir  . basename($_FILES["image_url"]["name"]); // Path to store the uploaded file
 
-     // File upload handling for video
-     $videoTargetDir = "uploads/"; // Directory where uploaded video files will be stored
-     $videoTargetFile = $videoTargetDir . basename($_FILES["video_url"]["name"]); // Path to store the uploaded video file
+    // File upload handling for video
+    $videoTargetDir = "uploads/"; // Directory where uploaded video files will be stored
+    $videoTargetFile = $videoTargetDir . basename($_FILES["video_url"]["name"]); // Path to store the uploaded video file
 
     // Move uploaded file to the specified directory
-    if (move_uploaded_file($_FILES["image_url"]["tmp_name"], $videoTargetFile)) {
-        echo "The file ". basename($_FILES["image_url"]["name"]). " has been uploaded.";
+    if (move_uploaded_file($_FILES["image_url"]["tmp_name"], $imageTargetFile) && move_uploaded_file($_FILES["video_url"]["tmp_name"], $videoTargetFile)) {
+        // Prepare SQL statement
+        $sql = "INSERT INTO videos (title, creator, description, image_url, video_url) VALUES (?, ?, ?, ?, ?)";
+
+        // Prepare and bind parameters
+        $stmt = $mysqli->prepare($sql);
+        $stmt->bind_param("sssss", $title, $creator, $description, $imageTargetFile, $videoTargetFile); 
+
+        // Execute the statement
+        if ($stmt->execute()) {
+            echo "Data inserted successfully.";
+            header("Location: index.php"); // Redirect to homepage
+        } else {
+            echo "Error: " . $sql . "<br>" . $mysqli->error;
+        }
+
+        // Close statement and database connection
+        $stmt->close();
     } else {
         echo "Sorry, there was an error uploading your file.";
     }
 
-     // Move uploaded video file to the specified directory
-     if (move_uploaded_file($_FILES["video_url"]["tmp_name"], $videoTargetFile)) {
-        echo "The video file ". basename($_FILES["video_url"]["name"]). " has been uploaded.";
-    } else {
-        echo "Sorry, there was an error uploading your video file.";
-    }
-
-    // Prepare SQL statement
-    $sql = "INSERT INTO videos (title, creator, description, image_url, video_url) VALUES (?, ?, ?, ?, ?)";
-
-    // Prepare and bind parameters
-    $stmt = $mysqli->prepare($sql);
-    $stmt->bind_param("sssss", $title, $creator, $description, $imageTargetFile, $videoTargetFile); // Note: Adjust the data types and order as needed
-
-    // Execute the statement
-    if ($stmt->execute()) {
-        echo "Data inserted successfully.";
-        header("Location: index.php"); // Redirect to homepage
-    } else {
-        echo "Error: " . $sql . "<br>" . $mysqli->error;
-    }
-
-    // Close statement and database connection
-    $stmt->close();
+    // Close the database connection
     $mysqli->close();
 }
 ?>
+
 
 <script>
     function validateForm() {
