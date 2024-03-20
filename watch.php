@@ -40,6 +40,7 @@
         padding: 10px 20px;
         font-size: 16px;
         cursor: pointer;
+        text-decoration: none;
     }
 
     .submit:hover {
@@ -92,7 +93,9 @@
 
                  // Show the delete button only if the user is logged in and is the creator of the video
                  if(isset($_SESSION['name']) && $_SESSION['name'] == $row["creator"]) {
-                    echo '<button class="submit delete-button" onclick="deleteVideo(' . $row["id"] . ')">Delete Your Video</button>';
+                   /*  echo '<button class="submit delete-button" onclick="deleteVideo(' . $row["id"] . ')">Update Your Video</button>'; */
+                    echo '<a href="edit.php?id=' . $row["id"] . '" class="submit">Edit Your Video</a>';
+                
                 }
             } else {
                 echo "Video not found.";
@@ -135,12 +138,6 @@
         video.style.display = 'block';
     }
 
-      // Function to delete the video
-      function deleteVideo(videoId) {
-        if(confirm("Are you sure you want to delete this video?")) {
-            window.location.href = "delete.php?id=" + videoId;
-        }
-    }
     
 </script>
 </body>
